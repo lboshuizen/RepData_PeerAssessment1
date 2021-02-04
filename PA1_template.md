@@ -42,7 +42,7 @@ summary(df)
 steps_per_days = with(na.omit(df), tapply(steps, date, sum))
 avg = mean(steps_per_days, na.rm = T)
 med = median(steps_per_days, na.rm = T)
-
+    
 hist(steps_per_days, xlab="Steps", main="",breaks = 10)
 abline(v = avg, col = "blue", lwd = 2)
 ```
@@ -77,7 +77,18 @@ ggplot(data=df_avg_day, aes(x=interval,y=avg_steps)) + geom_line() + theme_minim
 
 ![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
+```r
+maxed = df_avg_day[which.max(df_avg_day$avg_steps),]
+```
+
+Maximum avg steps = __206.1698113__ @interval __835__
+    
+
 ## Imputing missing values
+
+Missing values for steps: __2304__
+
+### Strategy
 
 Interval is numeric presentation of time: 2355 eq 23:55<br />
 Instead of imputing the average daily steps (which seems most obvious),<br />
@@ -101,6 +112,36 @@ m_df <- m_df[, names(df)]
 df <- rbind(na.omit(df),m_df)
 ```
 
+
+```r
+steps_per_days = with(na.omit(df), tapply(steps, date, sum))
+avg = mean(steps_per_days, na.rm = T)
+med = median(steps_per_days, na.rm = T)
+    
+hist(steps_per_days, xlab="Steps", main="",breaks = 10)
+abline(v = avg, col = "blue", lwd = 2)
+abline(v = med, col = "green", lwd = 2)
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+
+
+```r
+avg
+```
+
+```
+## [1] 9705.238
+```
+
+```r
+med
+```
+
+```
+## [1] 10395
+```
+
 ## Are there differences in activity patterns between weekdays and weekends?
 
 
@@ -111,5 +152,5 @@ dfw <- df %>% group_by(isweekend,interval) %>% summarise(steps=mean(steps))
 ggplot(data=dfw, aes(x=interval,y=steps)) + geom_line() + facet_wrap(~isweekend, ncol=1) + theme_minimal() + labs(x="Interval",y="Average steps",title="Dxifferences in activity patterns between weekdays and weekends")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](PA1_template_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
